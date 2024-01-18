@@ -1,9 +1,12 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy_serializer import SerializerMixin
 
 db = SQLAlchemy()
 
-class Owner(db.Model):
+class Owner(db.Model, SerializerMixin):
     __tablename__ = 'owners'
+
+    serialize_rules = ('-pets.owner',)
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, unique=True)
@@ -13,8 +16,10 @@ class Owner(db.Model):
     def __repr__(self):
         return f'<Pet Owner {self.name}>'
 
-class Pet(db.Model):
+class Pet(db.Model, SerializerMixin):
     __tablename__ = 'pets'
+
+    serialize_rules = ('-owners.pet',)
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
